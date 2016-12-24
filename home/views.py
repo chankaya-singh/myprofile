@@ -1,7 +1,11 @@
 from django.shortcuts import render
-from django.shortcuts import HttpResponse
+#from django.shortcuts import HttpResponse
 
 # Create your views here.
+from .forms import UploadFileForm
+#from somewhere import handle_uploaded_file
+from django.http.response import HttpResponseRedirect
+
 def index(request):
     return render(request, 'home/index.html')
 
@@ -18,3 +22,14 @@ def hoby(request):
 
 def work_exp(request):
     return render(request, 'home/work_exp.html')
+
+def upload_file(request):
+    if request.method =='POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('/success/url')
+    else:
+        form = UploadFileForm()
+    return render(request,'upload.html', {'form':form})
+        
